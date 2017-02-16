@@ -2,9 +2,9 @@
 namespace Winnipass;
 
 use Google_Client;
-use Google_Service_Analytics_UserRef;
-use Google_Service_Analytics_EntityUserLinkPermissions;
-use Google_Service_Analytics_EntityUserLink;
+//use Google_Service_Analytics_UserRef;
+//use Google_Service_Analytics_EntityUserLinkPermissions;
+//use Google_Service_Analytics_EntityUserLink;
 use Google_Service_Analytics;
 
 class Analytics{
@@ -30,7 +30,7 @@ class Analytics{
 
         $client->setAccessToken( json_encode( $this->token ) );
 
-        $analytics = new Google_Service_Analytics($client);
+        $analytics = new Google_Service_Analytics( $client );
 
         try {
 
