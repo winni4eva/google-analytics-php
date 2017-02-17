@@ -6,27 +6,23 @@ use Carbon\Carbon;
 use Google_Service_Analytics;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
+use Google_Client;
 
 class AnalyticsService
 {
     use Macroable;
 
-    /** @var \Spatie\Analytics\AnalyticsClient */
+    /** @var \Winnipass\AnalyticsClient */
     protected $client;
 
     /** @var string */
     protected $viewId;
 
     /**
-     * @param \Spatie\Analytics\AnalyticsClient $client
+     * @param \Winnipass\AnalyticsClient $client
      * @param string                            $viewId
      */
-    public function __construct(AnalyticsClient $client, string $viewId)
-    {
-        $this->client = $client;
-
-        $this->viewId = $viewId;
-    }
+    public function __construct(){}
 
     /**
      * @param string $viewId
@@ -38,6 +34,28 @@ class AnalyticsService
         $this->viewId = $viewId;
 
         return $this;
+    }
+
+    /**
+     * @param \Winnipass\AnalyticsClient $client
+     *
+     * @return $this
+     */
+    public function setClient( Google_Client $googleCLient)
+    {
+        $googleAnalyticsService = new Google_Service_Analytics( $googleCLient );
+        
+        $this->client = new AnalyticsClient( $googleAnalyticsService );
+
+        return $this;
+    }
+
+    public function getClient(){
+        return new Google_Client();
+    }
+
+    public function getClientSecretFile( $path ){
+        return file_get_contents( $path );
     }
 
     public function fetchVisitorsAndPageViews(Period $period): Collection

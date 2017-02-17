@@ -17,11 +17,12 @@ class AnalyticsClient
     /** @var int */
     protected $cacheLifeTimeInMinutes = 0;
 
-    public function __construct(Google_Service_Analytics $service, Repository $cache)
+    //public function __construct(Google_Service_Analytics $service, Repository $cache)
+    public function __construct(Google_Service_Analytics $service)
     {
         $this->service = $service;
 
-        $this->cache = $cache;
+        //$this->cache = $cache;
     }
 
     /**
@@ -51,13 +52,13 @@ class AnalyticsClient
      */
     public function performQuery(string $viewId, DateTime $startDate, DateTime $endDate, string $metrics, array $others = [])
     {
-        $cacheName = $this->determineCacheName(func_get_args());
+        //$cacheName = $this->determineCacheName(func_get_args());
 
-        if ($this->cacheLifeTimeInMinutes == 0) {
-            $this->cache->forget($cacheName);
-        }
+        //if ($this->cacheLifeTimeInMinutes == 0) {
+            //$this->cache->forget($cacheName);
+        //}
 
-        return $this->cache->remember($cacheName, $this->cacheLifeTimeInMinutes, function () use ($viewId, $startDate, $endDate, $metrics, $others) {
+        //return $this->cache->remember($cacheName, $this->cacheLifeTimeInMinutes, function () use ($viewId, $startDate, $endDate, $metrics, $others) {
             return $this->service->data_ga->get(
                "ga:{$viewId}",
                $startDate->format('Y-m-d'),
@@ -65,10 +66,10 @@ class AnalyticsClient
                $metrics,
                $others
            );
-        });
+        //});
     }
 
-    public function getAnalyticsService(): Google_Service_Analytics
+    public function getAnalyticsService()
     {
         return $this->service;
     }
