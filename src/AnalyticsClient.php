@@ -21,6 +21,8 @@ class AnalyticsClient
     /** @var int */
     protected $cacheLifeTimeInMinutes = 0;
 
+    protected $cacheTime = 7200;// 7200 second maps to two hours of cache time
+
 
     public function __construct(Google_Service_Analytics $service)
     {
@@ -59,13 +61,10 @@ class AnalyticsClient
     {
         $cacheName = $this->determineCacheName(func_get_args());
 
-        $this->cache->eraseExpired();
+        $this->eraseExpiredCachedEntries();
 
-        if( $this->cache->isCached( $cacheName ) ){
-            echo "Found something in cache <br>";
+        if( $this->cache->isCached( $cacheName ) )
             return $this->cache->retrieve( $cacheName );
-        }
-        echo "Store new cache <br>";
 
         return $this->cache->store( 
             $cacheName,  
@@ -75,7 +74,8 @@ class AnalyticsClient
                $endDate->format('Y-m-d'),
                $metrics,
                $others
-           )
+           ),
+           $this->cacheTime
         )->retrieve( $cacheName );
 
     }
@@ -91,5 +91,12 @@ class AnalyticsClient
     protected function determineCacheName(array $properties): string
     {
         return 'winnipass.google-analytics.'.md5(serialize($properties));
+    }
+
+    /*
+     * Erase expired cache entries.
+     */
+    protected function eraseExpiredCachedEntries(){
+        $this->cache->eraseExpired();
     }
 }

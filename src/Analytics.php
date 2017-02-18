@@ -14,9 +14,9 @@ class Analytics{
 
     protected $secretFilePath;
 
-    public function __construct($accessToken, $secretFilePath ){
+    public function __construct(array $accessToken, string $secretFilePath ){
         $this->analyticsService = new AnalyticsService;
-        $this->accessToken = $accessToken;
+        $this->accessToken = json_encode( $accessToken );
         $this->secretFilePath = $secretFilePath;
     }
 
@@ -28,7 +28,7 @@ class Analytics{
 
         $client->setAuthConfig( $secret_json );
 
-        $client->setAccessToken( $this->accessToken) ;
+        $client->setAccessToken( $this->accessToken ) ;
 
         $pageViews = $this->analyticsService->setViewId( '124364440' )->setClient( $client )->fetchVisitorsAndPageViews( Period::create( $this->getDateTimeDate('2016-08-20'), $this->getDateTimeDate('2017-01-31') ) );
         
