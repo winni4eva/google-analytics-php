@@ -13,7 +13,13 @@ $token = [
 
 $secret_json_path = realpath(__DIR__) .'\path-to-your-secret-json-file.json' ;
 
-$viewId = '1234567';
+$analyticsService = new Analytics;
 
-echo (new Analytics( $token , $secret_json_path, $viewId ))->initialize();//Returns a Laravel Collection Object
+$service = $analyticsService->setClient( $token, $secret_json_path )
+                ->setViewId( '1234567' );
+                
+                
+$visitorsAndPageViews = $service->fetchVisitorsAndPageViews( '2016-08-20', '2017-01-31' );
+
+var_dump($visitorsAndPageViews);
 
