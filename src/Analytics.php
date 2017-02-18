@@ -30,7 +30,7 @@ class Analytics{
 
         $client->setAccessToken( $this->accessToken) ;
 
-        $pageViews = $this->analyticsService->setViewId( '124364440' )->setClient( $client )->fetchVisitorsAndPageViews( Period::create( $this->getDateTimeDate('2016-08-20'), $this->getDateTimeDate('2017-08-31') ) );
+        $pageViews = $this->analyticsService->setViewId( '124364440' )->setClient( $client )->fetchVisitorsAndPageViews( Period::create( $this->getDateTimeDate('2016-08-20'), $this->getDateTimeDate('2017-01-31') ) );
         
         var_dump( $pageViews );
     }

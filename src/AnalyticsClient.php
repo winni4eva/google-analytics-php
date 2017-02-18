@@ -4,25 +4,30 @@ namespace Winnipass;
 
 use DateTime;
 use Google_Service_Analytics;
-use Illuminate\Contracts\Cache\Repository;
+use Cache;
+//use Illuminate\Contracts\Cache\Repository;
 
 class AnalyticsClient
 {
+
+    protected $cachePath = __DIR__.'/Cache/analytics-cache/';
+
     /** @var \Google_Service_Analytics */
     protected $service;
 
-    /** @var \Illuminate\Contracts\Cache\Repository */
+    /** @var \Cache */
     protected $cache;
 
     /** @var int */
     protected $cacheLifeTimeInMinutes = 0;
 
-    //public function __construct(Google_Service_Analytics $service, Repository $cache)
+
     public function __construct(Google_Service_Analytics $service)
     {
         $this->service = $service;
 
-        //$this->cache = $cache;
+        $this->cache = (new Cache)->setCachePath( $this->cachePath );
+        
     }
 
     /**
@@ -52,21 +57,27 @@ class AnalyticsClient
      */
     public function performQuery(string $viewId, DateTime $startDate, DateTime $endDate, string $metrics, array $others = [])
     {
-        //$cacheName = $this->determineCacheName(func_get_args());
+        $cacheName = $this->determineCacheName(func_get_args());
 
-        //if ($this->cacheLifeTimeInMinutes == 0) {
-            //$this->cache->forget($cacheName);
-        //}
+        $this->cache->eraseExpired();
 
-        //return $this->cache->remember($cacheName, $this->cacheLifeTimeInMinutes, function () use ($viewId, $startDate, $endDate, $metrics, $others) {
-            return $this->service->data_ga->get(
+        if( $this->cache->isCached( $cacheName ) ){
+            echo "Found something in cache <br>";
+            return $this->cache->retrieve( $cacheName );
+        }
+        echo "Store new cache <br>";
+
+        return $this->cache->store( 
+            $cacheName,  
+            $this->service->data_ga->get(
                "ga:{$viewId}",
                $startDate->format('Y-m-d'),
                $endDate->format('Y-m-d'),
                $metrics,
                $others
-           );
-        //});
+           )
+        )->retrieve( $cacheName );
+
     }
 
     public function getAnalyticsService()
@@ -79,6 +90,6 @@ class AnalyticsClient
      */
     protected function determineCacheName(array $properties): string
     {
-        return 'spatie.laravel-analytics.'.md5(serialize($properties));
+        return 'winnipass.google-analytics.'.md5(serialize($properties));
     }
 }
