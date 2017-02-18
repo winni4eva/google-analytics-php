@@ -5,7 +5,7 @@
     "keywords": ["google", "analytics"],
     "license": "MIT",
     "require":{
-        "illuminate/support": "^5.3",
+        "illuminate/support": "^5.1",
         "google/apiclient" : "^1.1",
         "nesbot/carbon": "^1.22",
         "vlucas/phpdotenv": "^2.4",
