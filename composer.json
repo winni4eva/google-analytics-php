@@ -1,7 +1,7 @@
 {
     "name": "winnipass/google-analytics-php",
     "type": "library",
-    "description": "Request Man is a PHP HTTP client library",
+    "description": "Winnipass Google Analytics Is PHP Library For Making Google Analytics Requests",
     "keywords": ["google", "analytics"],
     "license": "MIT",
     "require":{
