@@ -5,9 +5,10 @@
     "keywords": ["google", "analytics"],
     "license": "MIT",
     "require":{
-        "illuminate/support": "~5.*",
+        "illuminate/support": "5.*",
         "google/apiclient" : "^1.1",
         "nesbot/carbon": "^1.22",
+        "vlucas/phpdotenv": "1.*",
         "cosenary/simple-php-cache": "dev-master"
     },
     "require-dev": {
