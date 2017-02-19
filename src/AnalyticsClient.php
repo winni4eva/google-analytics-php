@@ -4,7 +4,7 @@ namespace Winnipass;
 
 use DateTime;
 use Google_Service_Analytics;
-//use Cache;
+use Winnipass\SimplePhp\Cache;
 //use Illuminate\Contracts\Cache\Repository;
 
 class AnalyticsClient
@@ -28,7 +28,7 @@ class AnalyticsClient
     {
         $this->service = $service;
 
-        $this->cache = (new \Cache)->setCachePath( $this->cachePath );
+        $this->cache = (new Cache)->setCachePath( $this->cachePath );
         
     }
 
