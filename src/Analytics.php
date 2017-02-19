@@ -199,7 +199,7 @@ class Analytics
      *
      * @return array|null
      */
-    protected function performQuery(Period $period, string $metrics, array $others = [])
+    public function performQuery(Period $period, string $metrics, array $others = [])
     {
         return $this->client->performQuery(
             $this->viewId,
