@@ -30,12 +30,9 @@ class AnalyticsClient
 
         $dirSeparator = DIRECTORY_SEPARATOR; 
 
-        // Setup File Path on your config files
         CacheManager::setDefaultConfig(array(
-            "path" => __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache{$dirSeparator}",//'/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
+            "path" => __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache{$dirSeparator}",
         ));
-
-        //$this->cachePath = __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache{$dirSeparator}";
 
         $this->cache = CacheManager::getInstance('files'); //(new Cache)->setCachePath( $this->cachePath );
         
@@ -73,36 +70,29 @@ class AnalyticsClient
         $cachedString = $this->cache->getItem( $cacheName );
 
         if (is_null($cachedString->get())) {
-            //echo "No item found in cache <br>";
     
-            $this->setCache( 
-                $cachedString, 
-                $this->service->data_ga->get(
+           $cachedString->set(
+               $this->service->data_ga->get(
                     "ga:{$viewId}",
                     $startDate->format('Y-m-d'),
                     $endDate->format('Y-m-d'),
                     $metrics,
                     $others
                 )
-           );
+           )->expiresAfter($this->cacheTime);
             
             $this->cache->save($cachedString);
 
-            return $cachedString->get();
+            return $this->fetchFromCache( $cachedString );
     
-        } else {
-            //echo "Item Found In Cache";
-            //echo $cachedString->getExpirationDate()->format(Datetime::W3C);
-            return $cachedString->get();
-    
-
         }
+            
+        return $this->fetchFromCache( $cachedString );
 
     }
 
-    protected function setCache(&$cachedString, $item, $expiry = 7200){
-        $cachedString->set($item)
-                ->expiresAfter($expiry);//in seconds, also accepts Datetime;
+    protected function fetchFromCache(&$cachedString){
+        return $cachedString->get();
     }
 
     public function getAnalyticsService()
