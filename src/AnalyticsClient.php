@@ -65,29 +65,29 @@ class AnalyticsClient
      */
     public function performQuery(string $viewId, DateTime $startDate, DateTime $endDate, string $metrics, array $others = [])
     {
-        $cacheName = $this->determineCacheName(func_get_args());
+        //$cacheName = $this->determineCacheName(func_get_args());
 
-        $cachedString = $this->cache->getItem( $cacheName );//
+        //$cachedString = $this->cache->getItem( $cacheName );//
 
-        if (is_null($cachedString->get())) {
+        //if (is_null($cachedString->get())) {
     
-           $cachedString->set(
-               $this->service->data_ga->get(
+           //$cachedString->set(
+               return $this->service->data_ga->get(
                     "ga:{$viewId}",
                     $startDate->format('Y-m-d'),
                     $endDate->format('Y-m-d'),
                     $metrics,
                     $others
-                )
-           )->expiresAfter($this->cacheTime);
+                );
+           //)->expiresAfter($this->cacheTime);
             
-            $this->cache->save($cachedString);
+            //$this->cache->save($cachedString);
 
-            return $this->fetchFromCache( $cachedString );
+            //return $this->fetchFromCache( $cachedString );
     
-        }
+        //}
             
-        return $this->fetchFromCache( $cachedString );
+        //return $this->fetchFromCache( $cachedString );
 
     }
 
