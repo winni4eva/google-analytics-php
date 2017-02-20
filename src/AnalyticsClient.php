@@ -67,7 +67,7 @@ class AnalyticsClient
     {
         $cacheName = $this->determineCacheName(func_get_args());
 
-        $cachedString = $this->cache->getItem( $cacheName );
+        $cachedString = $this->cache->getItem( $cacheName );//
 
         if (is_null($cachedString->get())) {
     
