@@ -9,7 +9,7 @@
         "google/apiclient" : "^1.1",
         "nesbot/carbon": "^1.22",
         "vlucas/phpdotenv": "1.*",
-        "winnipass/simple-php-cache": "dev-master"
+        "phpFastCache/phpFastCache": "^5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.0.*"

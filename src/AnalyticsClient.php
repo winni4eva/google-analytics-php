@@ -4,7 +4,7 @@ namespace Winnipass;
 
 use DateTime;
 use Google_Service_Analytics;
-use Winnipass\SimplePhp\Cache;
+use phpFastCache\CacheManager;
 //use Illuminate\Contracts\Cache\Repository;
 
 class AnalyticsClient
@@ -30,9 +30,14 @@ class AnalyticsClient
 
         $dirSeparator = DIRECTORY_SEPARATOR; 
 
-        $this->cachePath = __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache{$dirSeparator}";
+        // Setup File Path on your config files
+        CacheManager::setDefaultConfig(array(
+            "path" => __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache{$dirSeparator}",//'/var/www/phpfastcache.com/dev/tmp', // or in windows "C:/tmp/"
+        ));
 
-        $this->cache = (new Cache)->setCachePath( $this->cachePath );
+        //$this->cachePath = __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache{$dirSeparator}";
+
+        $this->cache = CacheManager::getInstance('files'); //(new Cache)->setCachePath( $this->cachePath );
         
     }
 
@@ -63,25 +68,41 @@ class AnalyticsClient
      */
     public function performQuery(string $viewId, DateTime $startDate, DateTime $endDate, string $metrics, array $others = [])
     {
-        // $cacheName = $this->determineCacheName(func_get_args());
+        $cacheName = $this->determineCacheName(func_get_args());
 
-        // $this->eraseExpiredCachedEntries();
+        $cachedString = $this->cache->getItem( $cacheName );
 
-        // if( $this->cache->isCached( $cacheName ) )
-        //     return $this->cache->retrieve( $cacheName );
+        if (is_null($cachedString->get())) {
+            //echo "No item found in cache <br>";
+    
+            $this->setCache( 
+                $cachedString, 
+                $this->service->data_ga->get(
+                    "ga:{$viewId}",
+                    $startDate->format('Y-m-d'),
+                    $endDate->format('Y-m-d'),
+                    $metrics,
+                    $others
+                )
+           );
+            
+            $this->cache->save($cachedString);
 
-        //return $this->cache->store( 
-            //$cacheName,  
-            return $this->service->data_ga->get(
-               "ga:{$viewId}",
-               $startDate->format('Y-m-d'),
-               $endDate->format('Y-m-d'),
-               $metrics,
-               $others
-           );//,
-           //$this->cacheTime
-        //)->retrieve( $cacheName );
+            return $cachedString->get();
+    
+        } else {
+            //echo "Item Found In Cache";
+            //echo $cachedString->getExpirationDate()->format(Datetime::W3C);
+            return $cachedString->get();
+    
 
+        }
+
+    }
+
+    protected function setCache(&$cachedString, $item, $expiry = 7200){
+        $cachedString->set($item)
+                ->expiresAfter($expiry);//in seconds, also accepts Datetime;
     }
 
     public function getAnalyticsService()
@@ -97,10 +118,4 @@ class AnalyticsClient
         return 'winnipass.google-analytics.'.md5(serialize($properties));
     }
 
-    /*
-     * Erase expired cache entries.
-     */
-    protected function eraseExpiredCachedEntries(){
-        $this->cache->eraseExpired();
-    }
 }
