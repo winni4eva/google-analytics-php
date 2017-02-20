@@ -31,7 +31,7 @@ class AnalyticsClient
         $dirSeparator = DIRECTORY_SEPARATOR; 
 
         CacheManager::setDefaultConfig(array(
-            "path" => __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache{$dirSeparator}",
+            "path" => __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache",
         ));
 
         $this->cache = CacheManager::getInstance('files'); //(new Cache)->setCachePath( $this->cachePath );
