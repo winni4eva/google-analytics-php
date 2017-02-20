@@ -4,4 +4,3 @@ composer.lock
 debug.log
 index.php
 .env
-/src/Cache/analytics-cache/
