@@ -10,7 +10,7 @@ use Winnipass\SimplePhp\Cache;
 class AnalyticsClient
 {
 
-    protected $cachePath = __DIR__.'/Cache/analytics-cache/';
+    protected $cachePath;
 
     /** @var \Google_Service_Analytics */
     protected $service;
@@ -27,6 +27,10 @@ class AnalyticsClient
     public function __construct(Google_Service_Analytics $service)
     {
         $this->service = $service;
+
+        $dirSeparator = DIRECTORY_SEPARATOR; 
+
+        $this->cachePath = __DIR__."{$dirSeparator}Cache{$dirSeparator}analytics-cache{$dirSeparator}";
 
         $this->cache = (new Cache)->setCachePath( $this->cachePath );
         
