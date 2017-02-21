@@ -4,7 +4,9 @@ namespace Winnipass;
 
 use DateTime;
 use Google_Service_Analytics;
-use phpFastCache\CacheManager;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
+use Cache\Adapter\Filesystem\FilesystemCachePool;
 //use Illuminate\Contracts\Cache\Repository;
 
 class AnalyticsClient
@@ -21,20 +23,22 @@ class AnalyticsClient
     /** @var int */
     protected $cacheLifeTimeInMinutes = 0;
 
-    protected $cacheTime = 7200;// 7200 second maps to two hours of cache time
+    protected $cacheTime = 3600;// 3600 second maps to an hour of cache time
 
 
     public function __construct(Google_Service_Analytics $service)
     {
         $this->service = $service;
 
-        $dirSeparator = DIRECTORY_SEPARATOR; 
-        //echo realpath(__DIR__)."/Cache/analytics-cache";
-        CacheManager::setDefaultConfig(array(
-            "path" => realpath(__DIR__)."/Cache/analytics-cache",
-        ));
+        //$dirSeparator = DIRECTORY_SEPARATOR; 
 
-        $this->cache = CacheManager::getInstance('files');
+        $filesystemAdapter = new Local(__DIR__.'/');
+        
+        $filesystem = new Filesystem( $filesystemAdapter );
+
+        $this->cache = new FilesystemCachePool( $filesystem );
+
+        //$this->cache->setFolder( realpath(__DIR__)."/Cache/analytics-cache" );
         
     }
 
@@ -67,27 +71,26 @@ class AnalyticsClient
     {
         $cacheName = $this->determineCacheName(func_get_args());
 
-        $cachedString = $this->cache->getItem( $cacheName );//
+        if( $this->cache->hasItem( $cacheName ) )
+            return $this->cache->getItem( $cacheName )->get();
 
-        if (is_null($cachedString->get())) {
-    
-           $cachedString->set(
-                $this->service->data_ga->get(
-                    "ga:{$viewId}",
-                    $startDate->format('Y-m-d'),
-                    $endDate->format('Y-m-d'),
-                    $metrics,
-                    $others
-                )
-           )->expiresAfter($this->cacheTime);
-            
-            $this->cache->save($cachedString);
+        $item = $this->cache->getItem( $cacheName );
+        
+        $item->set( 
+            $this->service->data_ga->get(
+                "ga:{$viewId}",
+                $startDate->format('Y-m-d'),
+                $endDate->format('Y-m-d'),
+                $metrics,
+                $others
+            ) 
+        );
+        
+        $item->expiresAfter( $this->cacheTime );
+        
+        $this->cache->save( $item );
 
-            return $this->fetchFromCache( $cachedString );
-    
-        }
-            
-        return $this->fetchFromCache( $cachedString );
+        return $this->cache->getItem( $cacheName )->get();
 
     }
 
@@ -105,7 +108,8 @@ class AnalyticsClient
      */
     protected function determineCacheName(array $properties): string
     {
-        return 'winnipass.google-analytics.'.md5(serialize($properties));
+        //return 'winnipass.google-analytics.'.md5(serialize($properties));
+        return 'winnipassgoogleanalytics'.md5(serialize($properties));
     }
 
 }

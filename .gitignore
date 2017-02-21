@@ -4,3 +4,4 @@ composer.lock
 debug.log
 index.php
 .env
+/src/cache
