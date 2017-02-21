@@ -39,12 +39,13 @@ $endDate = new DateTime( date( 'Y-m-d', strtotime( '2016-08-20' ) ) );
 
 $visitorsAndPageViews = $service->performQuery( new Period($startDate, $endDate), 'ga:pageviews' );
 
-#Iterating over response using Laravel Collection Helper method collect()
-#for more info about Laravel Collections visit https://laravel.com/docs/5.4/collections
+Iterateover response using Laravel Collection Helper method collect()
+
 $pageViews = collect($visitorsAndPageViews['rows'] ?? [])->map(function ($pageViews) {
      return $pageViews;
 });
 
+var_dump($pageViews);
 
-var_dump($visitorsAndPageViews);
+for more info about Laravel Collections visit https://laravel.com/docs/5.4/collections
 
