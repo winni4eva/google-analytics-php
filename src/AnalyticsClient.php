@@ -4,7 +4,7 @@ namespace Winnipass;
 
 use DateTime;
 use Google_Service_Analytics;
-use phpFastCache\CacheManager;
+//use phpFastCache\CacheManager;
 //use Illuminate\Contracts\Cache\Repository;
 
 class AnalyticsClient
@@ -28,13 +28,13 @@ class AnalyticsClient
     {
         $this->service = $service;
 
-        $dirSeparator = DIRECTORY_SEPARATOR; 
+        //$dirSeparator = DIRECTORY_SEPARATOR; 
         //echo realpath(__DIR__)."/Cache/analytics-cache";
-        CacheManager::setDefaultConfig(array(
-            "path" => realpath(__DIR__)."/Cache/analytics-cache",
-        ));
+        //CacheManager::setDefaultConfig(array(
+            //"path" => realpath(__DIR__)."/Cache/analytics-cache",
+        //));
 
-        $this->cache = CacheManager::getInstance('files'); //(new Cache)->setCachePath( $this->cachePath );
+        //$this->cache = CacheManager::getInstance('files'); //(new Cache)->setCachePath( $this->cachePath );
         
     }
 
@@ -91,9 +91,9 @@ class AnalyticsClient
 
     }
 
-    protected function fetchFromCache(&$cachedString){
-        return $cachedString->get();
-    }
+    // protected function fetchFromCache(&$cachedString){
+    //     return $cachedString->get();
+    // }
 
     public function getAnalyticsService()
     {
