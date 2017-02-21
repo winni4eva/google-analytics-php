@@ -49,3 +49,8 @@ var_dump($pageViews);
 
 for more info about Laravel Collections visit https://laravel.com/docs/5.4/collections
 
+#Ubuntu permissions to enable mkdir create cache folder
+sudo chown -R www-data:www-data /var/www/
+
+sudo chmod -R g+rw /var/www/
+
