@@ -32,11 +32,11 @@ class AnalyticsClient
 
         //$dirSeparator = DIRECTORY_SEPARATOR; 
 
-        //$filesystemAdapter = new Local(__DIR__.'/');
+        $filesystemAdapter = new Local(__DIR__.'/');
         
-        //$filesystem = new Filesystem( $filesystemAdapter );
+        $filesystem = new Filesystem( $filesystemAdapter );
 
-        //$this->cache = new FilesystemCachePool( $filesystem );
+        $this->cache = new FilesystemCachePool( $filesystem );
 
         //$this->cache->setFolder( realpath(__DIR__)."/Cache/analytics-cache" );
         
@@ -69,29 +69,33 @@ class AnalyticsClient
      */
     public function performQuery(string $viewId, DateTime $startDate, DateTime $endDate, string $metrics, array $others = [])
     {
-        //$cacheName = $this->determineCacheName(func_get_args());
+        $cacheName = $this->determineCacheName(func_get_args());
 
-        //if( $this->cache->hasItem( $cacheName ) )
-            //return $this->cache->getItem( $cacheName )->get();
+        if( $this->cache->hasItem( $cacheName ) )
+            return $this->cache->getItem( $cacheName )->get();
 
-        //$item = $this->cache->getItem( $cacheName );
+        $item = $this->cache->getItem( $cacheName );
         
-        //$item->set( 
-            return $this->service->data_ga->get(
+        $item->set( 
+            $this->service->data_ga->get(
                 "ga:{$viewId}",
                 $startDate->format('Y-m-d'),
                 $endDate->format('Y-m-d'),
                 $metrics,
                 $others
-            ); 
-        //);
+            ) 
+        );
         
-        //$item->expiresAfter( $this->cacheTime );
+        $item->expiresAfter( $this->cacheTime );
         
-        //$this->cache->save( $item );
+        $this->cache->save( $item );
 
-        //return $this->cache->getItem( $cacheName )->get();
+        return $this->cache->getItem( $cacheName )->get();
 
+    }
+
+    protected function fetchFromCache(&$cachedString){
+        return $cachedString->get();
     }
 
     public function getAnalyticsService()
