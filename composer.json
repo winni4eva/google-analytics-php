@@ -1,12 +1,12 @@
 {
     "name": "winnipass/google-analytics-php",
     "type": "library",
-    "description": "Winnipass Google Analytics Is PHP Library For Making Google Analytics Requests",
+    "description": "Winnipass Google Analytics Is A PHP Library For Making Google Analytics Requests",
     "keywords": ["google", "analytics"],
     "license": "MIT",
     "require":{
         "illuminate/support": "5.*",
-        "google/apiclient" : "^1.1",
+        "google/apiclient" : "^2.0",
         "nesbot/carbon": "^1.22",
         "vlucas/phpdotenv": "1.*",
         "cache/cache": "^0.3.0"
