@@ -10,7 +10,7 @@ class GoogleOAuth implements OAuthInterface
 
     protected $client;
 
-    protected $authUrl;
+    public $authUrl;
 
     public $token;
 
