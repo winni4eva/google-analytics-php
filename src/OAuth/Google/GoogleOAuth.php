@@ -66,9 +66,9 @@ class GoogleOAuth implements OAuthInterface
         return $this->client->isAccessTokenExpired();
     }
 
-    public function refreshToken()
+    public function refreshToken( $refreshToken )
     {
-        $this->client->refreshToken();
+        $this->client->refreshToken( $refreshToken );
     }
 
     public function makeRequest( $url )
