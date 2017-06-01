@@ -49,8 +49,50 @@ var_dump($pageViews);
 
 for more info about Laravel Collections visit https://laravel.com/docs/5.4/collections
 
-#Ubuntu permissions to enable mkdir create cache folder
-sudo chown -R www-data:www-data /var/www/
+#OAuth
+$secret_json_path = __DIR__ .'/credentials/secret.json';
 
-sudo chmod -R g+rw /var/www/
+$client = new GoogleOAuth( 
+    $secret_json_path, 
+    "http://localhost:8001/api/v1/analytics/install", 
+    ['https://www.googleapis.com/auth/analytics'] 
+);
+
+
+
+if( isset($_GET['error']) )
+{
+    var_dump($_GET['error']);
+}
+elseif(!isset($_GET['code']))
+{
+    $client->redirect();
+}
+else
+{
+    $tokens = $client->authenticate( $_GET['code'] )->getTokens();
+
+    if($tokens)
+    {
+         $client->setAccessToken( $tokens );
+
+        if ( $client->isAccessTokenExpired() ) 
+        {
+            $client->refreshToken( $tokens['refresh_token'] );
+            
+            $tokens = $client->getAccessToken();
+        }
+
+        $response = $client->makeRequest('https://www.googleapis.com/analytics/v3/management/accounts');
+
+        var_dump($response->getBody()->getContents());
+
+    }else{
+        echo "No tokens Found !!!";
+    }
+}
+
+flash last 3, I know who you are,
+walking dead second half season 6,
+love and hip hop atlanta, last 4 episodes season 6
 
