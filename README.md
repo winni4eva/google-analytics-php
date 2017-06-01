@@ -50,7 +50,8 @@
     //for more info about Laravel Collections visit https://laravel.com/docs/5.4/collections
 
 # OAuth
-
+    use Winnipass\OAuth\Google\GoogleOAuth;
+    
     $secret_json_path = __DIR__ .'/credentials/secret.json';
 
     $client = new GoogleOAuth( 
