@@ -1,11 +1,11 @@
 # google-analytics-php Installation
 
-composer require winnipass/google-analytics-php
+    composer require winnipass/google-analytics-php
 
-use Winnipass\Analytics;
-use Winnipass\Period;
+    use Winnipass\Analytics;
+    use Winnipass\Period;
 
-$token = [
+    $token = [
         "access_token"=>"your-access-token", 
         "refresh_token"=>"refresh-token", 
         "token_type"=>"Bearer",
@@ -14,40 +14,40 @@ $token = [
         "created"=>1320790426
     ];
 
-$secret_json_path = realpath(__DIR__) .'\path-to-your-secret-json-file.json' ;
+    $secret_json_path = realpath(__DIR__) .'\path-to-your-secret-json-file.json' ;
 
-$analyticsService = new Analytics;
+    $analyticsService = new Analytics;
 
-$service = $analyticsService->setClient( $token, $secret_json_path )
+    $service = $analyticsService->setClient( $token, $secret_json_path )
                 ->setViewId( '1234567' );
                 
                 
-$visitorsAndPageViews = $service->fetchVisitorsAndPageViews( '2016-08-20', '2017-01-31' );
+    $visitorsAndPageViews = $service->fetchVisitorsAndPageViews( '2016-08-20', '2017-01-31' );
 
-$totalVisitorsAndPageViews = $service->fetchTotalVisitorsAndPageViews( '2016-08-20', '2017-01-31' );
+    $totalVisitorsAndPageViews = $service->fetchTotalVisitorsAndPageViews( '2016-08-20', '2017-01-31' );
 
-$mostVisitedPaged = $service->fetchMostVisitedPages( '2016-08-20', '2017-01-31' );
+    $mostVisitedPaged = $service->fetchMostVisitedPages( '2016-08-20', '2017-01-31' );
 
-$topReferrers = $service->fetchTopReferrers( '2016-08-20', '2017-01-31' );
+    $topReferrers = $service->fetchTopReferrers( '2016-08-20', '2017-01-31' );
 
-$topBrowsers = $service->fetchTopBrowsers( '2016-08-20', '2017-01-31' );
+    $topBrowsers = $service->fetchTopBrowsers( '2016-08-20', '2017-01-31' );
 
 # Custom Query
-$startDate = new DateTime( date( 'Y-m-d', strtotime( '2016-08-20' ) ) ); 
+    $startDate = new DateTime( date( 'Y-m-d', strtotime( '2016-08-20' ) ) ); 
 
-$endDate = new DateTime( date( 'Y-m-d', strtotime( '2016-08-20' ) ) ); 
+    $endDate = new DateTime( date( 'Y-m-d', strtotime( '2016-08-20' ) ) ); 
 
-$visitorsAndPageViews = $service->performQuery( new Period($startDate, $endDate), 'ga:pageviews' );
+    $visitorsAndPageViews = $service->performQuery( new Period($startDate, $endDate), 'ga:pageviews' );
 
-Iterateover response using Laravel Collection Helper method collect()
+    //Iterate over response using Laravel Collection Helper method collect()
 
-$pageViews = collect($visitorsAndPageViews['rows'] ?? [])->map(function ($pageViews) {
-     return $pageViews;
-});
+    $pageViews = collect($visitorsAndPageViews['rows'] ?? [])->map(function ($pageViews) {
+        return $pageViews;
+    });
 
-var_dump($pageViews);
+    var_dump($pageViews);
 
-for more info about Laravel Collections visit https://laravel.com/docs/5.4/collections
+    //for more info about Laravel Collections visit https://laravel.com/docs/5.4/collections
 
 # OAuth
 
