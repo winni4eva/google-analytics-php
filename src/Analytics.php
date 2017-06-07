@@ -45,7 +45,7 @@ class Analytics
 
         $googleClient = new Google_Client;
 
-        $googleClient->setAuthConfig( $this->getClientSecretFile( $secretJsonPath ) );
+        $googleClient->setAuthConfig( $secretJsonPath  );
 
         $googleClient->setAccessToken( json_encode( $token ) );
 
