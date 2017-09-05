@@ -9,7 +9,7 @@
         "google/apiclient" : "^2.0",
         "nesbot/carbon": "^1.22",
         "vlucas/phpdotenv": "2.*",
-        "cache/filesystem-adapter": "^0.5.0@dev"
+        "cache/filesystem-adapter": "^1.0@dev"
     },
     "require-dev": {
     },
